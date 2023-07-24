@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaTestColorConverter.ViewModels"
+             xmlns:avaloniaTestColorConverter="clr-namespace:AvaloniaTestColorConverter"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaTestColorConverter.Views.MainView"
+             x:DataType="vm:MainViewModel"
+             x:CompileBindings="True">
+    <UserControl.Resources>
+        <avaloniaTestColorConverter:CellColorConverter x:Key="CellColorConverter" />
+        <avaloniaTestColorConverter:IsCheckedColorConverter x:Key="IsCheckedColorConverter" />
+    </UserControl.Resources>
+
+    <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+
+    <vm:MainViewModel />
+  </Design.DataContext>
+    <StackPanel>
+        <Button Command="{Binding ButtonAddRow}" >Add Row</Button>
+        <Button Command="{Binding ButtonChangeProp}" >Change Prop in Model</Button>
+        <DataGrid Height="600" Margin="20" ItemsSource="{Binding People}"        
+                  IsReadOnly="False"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  GridLinesVisibility="All"
+                  
+                  BorderThickness="1" BorderBrush="Gray">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="First Name"  Binding="{Binding FirstName, Mode=TwoWay }"/>
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName, Mode=TwoWay}" />
+                <DataGridCheckBoxColumn Header="Fictitious?" Binding="{Binding IsFictitious, Mode=TwoWay}" />
+            </DataGrid.Columns>
+            <DataGrid.Styles>
+                <Style Selector="DataGridCell:nth-child(1)">
+                    <Setter Property="Background" 
+                            Value="{Binding Converter={ StaticResource CellColorConverter} ,Mode=TwoWay}" />
+                </Style>
+            </DataGrid.Styles> 
+        </DataGrid>
+        <TextBlock Text="{Binding  Greeting}"/>
+    </StackPanel>
+</UserControl>
+
