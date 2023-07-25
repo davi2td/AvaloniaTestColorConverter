@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:AvaloniaTestColorConverter.ViewModels"
              xmlns:avaloniaTestColorConverter="clr-namespace:AvaloniaTestColorConverter"
+             xmlns:models="clr-namespace:AvaloniaTestColorConverter.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaTestColorConverter.Views.MainView"
              x:DataType="vm:MainViewModel"
@@ -38,7 +39,7 @@
             <DataGrid.Styles>
                 <Style Selector="DataGridCell:nth-child(1)">
                     <Setter Property="Background" 
-                            Value="{Binding Converter={ StaticResource CellColorConverter} ,Mode=TwoWay}" />
+                            Value="{Binding (models:Person).FirstName, Converter={StaticResource CellColorConverter}}" />
                 </Style>
             </DataGrid.Styles> 
         </DataGrid>
