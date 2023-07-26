@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <avaloniaTestColorConverter:CellColorConverter x:Key="CellColorConverter" />
         <avaloniaTestColorConverter:IsCheckedColorConverter x:Key="IsCheckedColorConverter" />
+        <avaloniaTestColorConverter:MultiCellColorConverter x:Key="MultiCellColorConverter" />
     </UserControl.Resources>
 
     <Design.DataContext>
@@ -23,7 +24,7 @@
     <StackPanel>
         <Button Command="{Binding ButtonAddRow}" >Add Row</Button>
         <Button Command="{Binding ButtonChangeProp}" >Change Prop in Model</Button>
-        <DataGrid Height="600" Margin="20" ItemsSource="{Binding People}"        
+        <DataGrid Name="PersonTable" Height="600" Margin="20" ItemsSource="{Binding People}"        
                   IsReadOnly="False"
                   CanUserReorderColumns="True"
                   CanUserResizeColumns="True"
@@ -32,15 +33,61 @@
                   
                   BorderThickness="1" BorderBrush="Gray">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name"  Binding="{Binding FirstName, Mode=TwoWay }"/>
-                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName, Mode=TwoWay}" />
-                <DataGridCheckBoxColumn Header="Fictitious?" Binding="{Binding IsFictitious, Mode=TwoWay}" />
+                <DataGridTextColumn  MaxWidth="100" Header="First Name"  Binding="{Binding FirstName }"/>
+                <DataGridTextColumn  MaxWidth="100" Header="Last Name" Binding="{Binding LastName}" />
+                <DataGridTemplateColumn Header="Ack">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                HorizontalAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                Background="Green"
+                                Command="{Binding #PersonTable.((vm:MainViewModel)DataContext).RemovePerson ,FallbackValue=''}"
+                                CommandParameter="{Binding .}"
+                                Content="Ack"
+                                Foreground="White" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.Styles>
-                <Style Selector="DataGridCell:nth-child(1)">
-                    <Setter Property="Background" 
-                            Value="{Binding (models:Person).FirstName, Converter={StaticResource CellColorConverter}}" />
+                <!--How to do for single column???-->
+                <Style Selector="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow" />
                 </Style>
+                <!--<Style Selector="DataGridCell:nth-child(1)">
+                    <Setter Property="Background" 
+                            Value="{Binding  (models:Person).FirstName, Converter={StaticResource CellColorConverter},ConverterParameter={ Binding  (models:Person).IsFictitious}}"/></Style>-->
+
+                <Style Selector="DataGridCell:nth-child(1)">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource MultiCellColorConverter}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="(models:Person).FirstName"/>
+                                    <Binding Path="(models:Person).IsFictitious"/>
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Setter.Value>
+
+                    </Setter>
+                </Style>
+                <!--<Style Selector="DataGridCell:nth-child(3)">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource MultiCellColorConverter}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="(models:Person).FirstName"/>
+                                    <Binding Path="(models:Person).IsFictitious"/>
+                                    </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Setter.Value>
+
+                    </Setter>
+                </Style>-->
+
+                            <!--Value="{Binding  (models:Person).FirstName, Converter={StaticResource CellColorConverter},ConverterParameter={ Binding  (models:Person).IsFictitious}}"/></Style>-->                    
+    
             </DataGrid.Styles> 
         </DataGrid>
         <TextBlock Text="{Binding  Greeting}"/>

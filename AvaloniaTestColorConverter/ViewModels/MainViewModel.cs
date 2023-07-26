@@ -1,11 +1,12 @@
 ﻿using System.Collections.Specialized;
 using Avalonia.Collections;
 using AvaloniaTestColorConverter.Models;
+using CommunityToolkit.Mvvm.Input;
 using ReactiveUI;
 
 namespace AvaloniaTestColorConverter.ViewModels;
 
-public class MainViewModel : ViewModelBase
+public partial class MainViewModel : ViewModelBase
 {
     private AvaloniaList<Person>? _people;
 
@@ -40,11 +41,18 @@ public class MainViewModel : ViewModelBase
 
     public void ButtonAddRow()
     {
-        _people?.Add(new Person("Neil", "Armstrong2", false));
+        _people?.Add(new Person("Neil", "Armstrong2", true));
     }
 
     private void test(object? sender, NotifyCollectionChangedEventArgs e)
     {
         // throw new NotImplementedException();
+    }
+
+    [RelayCommand]
+    public void RemovePerson(Person? person)
+    {
+        //if (person != null) _people?.Remove(person);
+        if (person != null) person.IsFictitious = !person.IsFictitious;
     }
 }
